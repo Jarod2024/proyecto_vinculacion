@@ -1,0 +1,2 @@
+C:/Proyectos/proyecto_vinculacion/android/app/.cxx/Debug/v1b566s3/armeabi-v7a/CMakeFiles/edit_cache.dir
+C:/Proyectos/proyecto_vinculacion/android/app/.cxx/Debug/v1b566s3/armeabi-v7a/CMakeFiles/rebuild_cache.dir
