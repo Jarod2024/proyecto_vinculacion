@@ -32,9 +32,22 @@ class _LoginPageState extends State<LoginPage> {
         );
         route();
       } on FirebaseAuthException catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(e.message ?? 'Error al iniciar sesión')),
-        );
+        // Verifica si el error es de contraseña incorrecta
+        if (e.code == 'wrong-password') {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+                content:
+                    Text('La contraseña es incorrecta. Inténtalo de nuevo.')),
+          );
+        } else if (e.code == 'user-not-found') {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('El usuario no encontrado.')),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(e.message ?? 'Error al iniciar sesión')),
+          );
+        }
       } finally {
         setState(() {
           _isLoading = false;
@@ -91,7 +104,7 @@ class _LoginPageState extends State<LoginPage> {
                     borderRadius: BorderRadius.circular(20), // Bordes curvados
                     child: Image.asset(
                       'assets/imagenes/escudo.jpg',
-                      width: 100, // Ajusta el tamaño según necesites
+                      width: 100, // Ajusta el tamaño según necesites
                       height: 100,
                       fit: BoxFit.cover,
                       errorBuilder: (context, error, stackTrace) {
@@ -102,7 +115,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   const SizedBox(height: 20),
                   const Text(
-                    "Iniciar Sesión",
+                    "Iniciar Sesión",
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 32,
@@ -132,7 +145,7 @@ class _LoginPageState extends State<LoginPage> {
                     decoration: InputDecoration(
                       filled: true,
                       fillColor: Colors.white,
-                      labelText: 'Ingrese su contraseña',
+                      labelText: 'Ingrese su contraseña',
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                         borderSide: BorderSide.none,
@@ -151,7 +164,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                     validator: (value) =>
-                        value!.isEmpty ? 'Ingrese su contraseña' : null,
+                        value!.isEmpty ? 'Ingrese su contraseña' : null,
                   ),
                   const SizedBox(height: 20),
                   _isLoading
@@ -167,7 +180,7 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                           ),
                           child: const Text(
-                            'Iniciar Sesión',
+                            'Iniciar Sesión',
                             style: TextStyle(fontSize: 18, color: Colors.white),
                           ),
                         ),
@@ -180,7 +193,7 @@ class _LoginPageState extends State<LoginPage> {
                       );
                     },
                     child: const Text(
-                      '¿No tienes cuenta? Regístrate',
+                      '¿No tienes cuenta? Regístrate',
                       style: TextStyle(color: Colors.white),
                     ),
                   ),
