@@ -5,7 +5,6 @@ import 'package:proyecto_vinculacion/Vistas/Registro_Usuario.dart';
 import 'Lideres_view.dart';
 import 'Comunidad_view.dart';
 
-
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
@@ -34,7 +33,7 @@ class _LoginPageState extends State<LoginPage> {
         route();
       } on FirebaseAuthException catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(e.message ?? 'Error al iniciar sesión')),
+          SnackBar(content: Text(e.message ?? 'Error al iniciar sesión')),
         );
       } finally {
         setState(() {
@@ -49,7 +48,7 @@ class _LoginPageState extends State<LoginPage> {
     FirebaseFirestore.instance.collection('usuarios').doc(user!.uid).get().then(
       (DocumentSnapshot documentSnapshot) {
         if (documentSnapshot.exists) {
-          if (documentSnapshot.get('role') == "Lider comunidad") {
+          if (documentSnapshot.get('role') == "Líder") {
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (context) => LiderComunidad()),
@@ -88,15 +87,29 @@ class _LoginPageState extends State<LoginPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(20), // Bordes curvados
+                    child: Image.asset(
+                      'assets/imagenes/escudo.jpg',
+                      width: 100, // Ajusta el tamaño según necesites
+                      height: 100,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        debugPrint("Error al cargar la imagen: $error");
+                        return Icon(Icons.error, color: Colors.red, size: 50);
+                      },
+                    ),
+                  ),
+                  const SizedBox(height: 20),
                   const Text(
-                    "Iniciar Sesión",
+                    "Iniciar Sesión",
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 32,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const SizedBox(height: 50),
+                  const SizedBox(height: 30),
                   TextFormField(
                     controller: _emailController,
                     decoration: InputDecoration(
@@ -109,7 +122,8 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       prefixIcon: const Icon(Icons.email, color: Colors.teal),
                     ),
-                    validator: (value) => value!.isEmpty ? 'Ingrese su email' : null,
+                    validator: (value) =>
+                        value!.isEmpty ? 'Ingrese su email' : null,
                   ),
                   const SizedBox(height: 20),
                   TextFormField(
@@ -118,7 +132,7 @@ class _LoginPageState extends State<LoginPage> {
                     decoration: InputDecoration(
                       filled: true,
                       fillColor: Colors.white,
-                      labelText: 'Ingrese su contraseña',
+                      labelText: 'Ingrese su contraseña',
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                         borderSide: BorderSide.none,
@@ -136,7 +150,8 @@ class _LoginPageState extends State<LoginPage> {
                         },
                       ),
                     ),
-                    validator: (value) => value!.isEmpty ? 'Ingrese su contraseña' : null,
+                    validator: (value) =>
+                        value!.isEmpty ? 'Ingrese su contraseña' : null,
                   ),
                   const SizedBox(height: 20),
                   _isLoading
@@ -145,13 +160,14 @@ class _LoginPageState extends State<LoginPage> {
                           onPressed: _signIn,
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.teal,
-                            padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 50),
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 18, horizontal: 50),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
                           ),
                           child: const Text(
-                            'Iniciar Sesión',
+                            'Iniciar Sesión',
                             style: TextStyle(fontSize: 18, color: Colors.white),
                           ),
                         ),
@@ -164,7 +180,7 @@ class _LoginPageState extends State<LoginPage> {
                       );
                     },
                     child: const Text(
-                      '¿No tienes cuenta? Regístrate',
+                      '¿No tienes cuenta? Regístrate',
                       style: TextStyle(color: Colors.white),
                     ),
                   ),
