@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:proyecto_vinculacion/BaseSqlLite.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -46,6 +47,18 @@ class _RegisterPageState extends State<RegisterPage> {
         'role': _role,
         'uid': userCredential.user!.uid,
       });
+      Map<String, dynamic> user = {
+      'name': _nameController.text.trim(),
+      'email': _emailController.text.trim(),
+      'address': _addressController.text.trim(),
+      'id_number': _idController.text.trim(),
+      'phone': _phoneController.text.trim(),
+      'community': _communityController.text.trim(),
+      'role': _role,
+      'uid': userCredential.user!.uid,
+    };
+    await DatabaseHelper().insertUser(user);
+
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Registro exitoso')),

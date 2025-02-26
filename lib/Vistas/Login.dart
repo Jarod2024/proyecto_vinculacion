@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:proyecto_vinculacion/BaseSqlLite.dart';
 import 'package:proyecto_vinculacion/Vistas/Registro_Usuario.dart';
 import 'Lideres_view.dart';
 import 'Comunidad_view.dart';
@@ -22,10 +23,15 @@ class _LoginPageState extends State<LoginPage> {
   final _auth = FirebaseAuth.instance;
 
   void _signIn() async {
-    if (_formKey.currentState!.validate()) {
-      setState(() {
-        _isLoading = true;
-      });
+  if (_formKey.currentState!.validate()) {
+    setState(() {
+      _isLoading = true;
+    });
+
+    // Verificar en SQLite
+    bool isUserInSQLite = await _checkUserInSQLite();
+    if (isUserInSQLite) {
+      // Si el usuario está en SQLite, intentar el login con Firebase
       try {
         await _auth.signInWithEmailAndPassword(
           email: _emailController.text.trim(),
@@ -41,8 +47,29 @@ class _LoginPageState extends State<LoginPage> {
           _isLoading = false;
         });
       }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('El usuario no existe en la base de datos local')),
+      );
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
+}
+
+Future<bool> _checkUserInSQLite() async {
+  // Verificar si el usuario existe en SQLite
+  final db = await DatabaseHelper().database;
+  final List<Map<String, dynamic>> result = await db.query(
+    'users',
+    where: 'email = ?',
+    whereArgs: [_emailController.text.trim()],
+  );
+
+  return result.isNotEmpty; // Si la lista no está vacía, el usuario existe
+  }
+
 
   void route() {
     User? user = FirebaseAuth.instance.currentUser;
