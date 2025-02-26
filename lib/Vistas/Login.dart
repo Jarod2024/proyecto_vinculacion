@@ -22,52 +22,66 @@ class _LoginPageState extends State<LoginPage> {
   final _auth = FirebaseAuth.instance;
 
   void _signIn() async {
-  if (_formKey.currentState!.validate()) {
-    setState(() {
-      _isLoading = true;
-    });
-
-    // Verificar en SQLite
-    bool isUserInSQLite = await _checkUserInSQLite();
-    if (isUserInSQLite) {
-      // Si el usuario está en SQLite, intentar el login con Firebase
-      try {
-        await _auth.signInWithEmailAndPassword(
-          email: _emailController.text.trim(),
-          password: _passwordController.text.trim(),
-        );
-        route();
-      } on FirebaseAuthException catch (e) {
+    if (_formKey.currentState!.validate()) {
+      setState(() {
+        _isLoading = true;
+      });
+      debugPrint("Email: ${_emailController.text.trim()}");
+      debugPrint("Password: ${_passwordController.text.trim()}");
+      // Verificar en SQLite si el usuario existe y la contraseña es correcta
+      bool isUserValid = await _checkUserInSQLite();
+      if (isUserValid) {
+        try {
+          // Intentar iniciar sesión en Firebase
+          await _auth.signInWithEmailAndPassword(
+            email: _emailController.text.trim(),
+            password: _passwordController.text.trim(),
+          );
+          route(); // Redirigir según el rol del usuario
+        } on FirebaseAuthException catch (e) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(e.message ?? 'Error al iniciar sesión')),
+          );
+        } finally {
+          setState(() {
+            _isLoading = false;
+          });
+        }
+      } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(e.message ?? 'Error al iniciar sesión')),
+          const SnackBar(content: Text('El usuario o la contraseña no son correctos en la base de datos local')),
         );
-      } finally {
         setState(() {
           _isLoading = false;
         });
       }
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('El usuario no existe en la base de datos local')),
-      );
-      setState(() {
-        _isLoading = false;
-      });
     }
   }
-}
 
-Future<bool> _checkUserInSQLite() async {
-  // Verificar si el usuario existe en SQLite
-  final db = await DatabaseHelper().database;
-  final List<Map<String, dynamic>> result = await db.query(
-    'users',
-    where: 'email = ?',
-    whereArgs: [_emailController.text.trim()],
-  );
+  Future<bool> _checkUserInSQLite() async {
+  //await DatabaseHelper().deleteDatabaseFile();
+  //debugPrint("Base de datos SQLite eliminada");
+  final user = await DatabaseHelper().getUserByEmail(_emailController.text.trim());
+  final prubea= await DatabaseHelper().getUsers();
 
-  return result.isNotEmpty; // Si la lista no está vacía, el usuario existe
+  debugPrint("Usuarios en SQLite: $prubea");
+  if (user != null) {
+    debugPrint("Usuario encontrado en SQLite: $user");
+
+    final storedPassword = user['password'];
+    final enteredPassword = _passwordController.text.trim();
+
+    if (storedPassword == enteredPassword) {
+      return true; // La contraseña coincide
+    } else {
+      debugPrint("Contraseña incorrecta.");
+    }
+  } else {
+    debugPrint("Usuario no encontrado en SQLite.");
   }
+
+  return false; // Usuario no encontrado o contraseña incorrecta
+}
 
 
   void route() {
@@ -118,7 +132,7 @@ Future<bool> _checkUserInSQLite() async {
                     borderRadius: BorderRadius.circular(20), // Bordes curvados
                     child: Image.asset(
                       'assets/imagenes/escudo.jpg',
-                      width: 100, // Ajusta el tamaño según necesites
+                      width: 100, // Ajusta el tamaño según necesites
                       height: 100,
                       fit: BoxFit.cover,
                       errorBuilder: (context, error, stackTrace) {
@@ -129,7 +143,7 @@ Future<bool> _checkUserInSQLite() async {
                   ),
                   const SizedBox(height: 20),
                   const Text(
-                    "Iniciar Sesión",
+                    "Iniciar Sesión",
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 32,
@@ -159,7 +173,7 @@ Future<bool> _checkUserInSQLite() async {
                     decoration: InputDecoration(
                       filled: true,
                       fillColor: Colors.white,
-                      labelText: 'Ingrese su contraseña',
+                      labelText: 'Ingrese su contraseña',
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                         borderSide: BorderSide.none,
@@ -178,7 +192,7 @@ Future<bool> _checkUserInSQLite() async {
                       ),
                     ),
                     validator: (value) =>
-                        value!.isEmpty ? 'Ingrese su contraseña' : null,
+                        value!.isEmpty ? 'Ingrese su contraseña' : null,
                   ),
                   const SizedBox(height: 20),
                   _isLoading
@@ -194,7 +208,7 @@ Future<bool> _checkUserInSQLite() async {
                             ),
                           ),
                           child: const Text(
-                            'Iniciar Sesión',
+                            'Iniciar Sesión',
                             style: TextStyle(fontSize: 18, color: Colors.white),
                           ),
                         ),
@@ -207,7 +221,7 @@ Future<bool> _checkUserInSQLite() async {
                       );
                     },
                     child: const Text(
-                      '¿No tienes cuenta? Regístrate',
+                      '¿No tienes cuenta? Regístrate',
                       style: TextStyle(color: Colors.white),
                     ),
                   ),

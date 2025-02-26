@@ -1,4 +1,4 @@
-import 'dart:async';
+import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
@@ -15,30 +15,21 @@ class DatabaseHelper {
     return _database!;
   }
 
-  // Inicialización de la base de datos SQLite
   Future<Database> _initDatabase() async {
     final databasesPath = await getDatabasesPath();
     final path = join(databasesPath, 'user_data.db');
-
     return await openDatabase(path, version: 1, onCreate: (db, version) async {
-      // Crear la tabla de usuarios
       await db.execute('''
         CREATE TABLE users (
-          id INTEGER PRIMARY KEY AUTOINCREMENT,
-          name TEXT,
-          email TEXT UNIQUE,  // Aseguramos que el correo sea único
-          address TEXT,
-          id_number TEXT,
-          phone TEXT,
-          community TEXT,
-          role TEXT,
-          uid TEXT
+          email TEXT PRIMARY KEY,
+          password TEXT NOT NULL,
+          rol TEXT NOT NULL
         )
       ''');
     });
   }
 
-  // Insertar usuario en la base de datos SQLite
+    // Insertar usuario en la base de datos SQLite
   Future<int> insertUser(Map<String, dynamic> user) async {
     final db = await database;
     
@@ -47,12 +38,11 @@ class DatabaseHelper {
       return await db.insert('users', user);
     } catch (e) {
       // Si ya existe un usuario con el mismo correo, se puede ignorar o manejar el error
-      print("Error al insertar usuario: $e");
+     debugPrint("Error al insertar usuario: $e");
       return -1;  // Retornamos -1 si hubo un error
     }
   }
-
-  // Obtener todos los usuarios
+    // Obtener todos los usuarios
   Future<List<Map<String, dynamic>>> getUsers() async {
     final db = await database;
     return await db.query('users');
@@ -68,28 +58,17 @@ class DatabaseHelper {
     );
     if (result.isNotEmpty) {
       return result.first; // Retorna el primer usuario encontrado
+      // ignore: dead_code
+      debugPrint("Usuario encontrado: ${result.first}");
     }
     return null; // Si no se encuentra, retorna null
   }
-
-  // Actualizar un usuario en la base de datos
-  Future<int> updateUser(Map<String, dynamic> user, int id) async {
-    final db = await database;
-    return await db.update(
-      'users',
-      user,
-      where: 'id = ?',
-      whereArgs: [id],
-    );
-  }
-
-  // Eliminar un usuario por su id
-  Future<int> deleteUser(int id) async {
-    final db = await database;
-    return await db.delete(
-      'users',
-      where: 'id = ?',
-      whereArgs: [id],
-    );
+  // Función para eliminar la base de datos completamente
+  Future<void> deleteDatabaseFile() async {
+    final databasesPath = await getDatabasesPath();
+    final path = join(databasesPath, 'user_data.db');
+    await deleteDatabase(path);
+    _database = null; // Resetear la referencia para que se vuelva a crear
+    debugPrint("Base de datos eliminada correctamente.");
   }
 }

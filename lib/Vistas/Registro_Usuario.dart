@@ -48,14 +48,9 @@ class _RegisterPageState extends State<RegisterPage> {
         'uid': userCredential.user!.uid,
       });
       Map<String, dynamic> user = {
-      'name': _nameController.text.trim(),
       'email': _emailController.text.trim(),
-      'address': _addressController.text.trim(),
-      'id_number': _idController.text.trim(),
-      'phone': _phoneController.text.trim(),
-      'community': _communityController.text.trim(),
-      'role': _role,
-      'uid': userCredential.user!.uid,
+      'password': _passwordController.text.trim(),
+      'rol' : _role,
     };
     await DatabaseHelper().insertUser(user);
 
