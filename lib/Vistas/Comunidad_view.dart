@@ -43,8 +43,8 @@ class _MiembroComunidadState extends State<MiembroComunidad> {
                 borderRadius: BorderRadius.circular(15),
               ),
               child: SizedBox(
-                height: MediaQuery.of(context).size.height *
-                    0.65, // Solo reduje la altura
+                height:
+                    MediaQuery.of(context).size.height * 0.5, // Altura reducida
                 width: MediaQuery.of(context).size.width *
                     0.9, // Mantengo el mismo ancho
                 child: Padding(
@@ -53,32 +53,88 @@ class _MiembroComunidadState extends State<MiembroComunidad> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Título
+                        // Título de la descripción con color diferente
                         const Text(
-                          'Descripción',
+                          'Descripción de la Aplicación',
                           style: TextStyle(
-                            fontSize: 26,
+                            fontSize: 18,
                             fontWeight: FontWeight.bold,
-                            color: Colors.teal,
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                        // Descripción
-                        const Text(
-                          'Miembro de la comunidad',
-                          style: TextStyle(
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.teal,
+                            color: Color(0xFF4A4A4A), // Gris oscuro
                           ),
                         ),
                         const SizedBox(height: 10),
+                        // Descripción
                         const Text(
-                          '1.\n2.\n3.\n4.\n5.\n6.\n7.\n8.\n9.',
+                          'Modelo de gestión de servicios que ayuda a los miembros de la comunidad a acceder a diversos servicios esenciales, con un enfoque en la organización, economía, y desarrollo comunitario.',
                           style: TextStyle(
-                            fontSize: 20,
-                            color: Colors.teal,
+                            fontSize: 16,
+                            color:
+                                Colors.teal, // Color teal para la descripción
                           ),
+                        ),
+                        const SizedBox(height: 20),
+                        // Título para los servicios con color diferente
+                        const Text(
+                          'Servicios ofrecidos',
+                          style: TextStyle(
+                            fontSize: 18, // Tamaño de texto ajustado
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF4A4A4A), // Gris oscuro
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        // Lista de viñetas con iconos
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: const [
+                                Icon(Icons.business, color: Colors.teal),
+                                SizedBox(width: 10),
+                                Expanded(
+                                  child: Text(
+                                    'Técnicas de administración comunitaria (Manejo de costos fijos).',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.teal,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 10),
+                            Row(
+                              children: const [
+                                Icon(Icons.monetization_on, color: Colors.teal),
+                                SizedBox(width: 10),
+                                Expanded(
+                                  child: Text(
+                                    'Administración de economía familiar.',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.teal,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 10),
+                            Row(
+                              children: const [
+                                Icon(Icons.hotel, color: Colors.teal),
+                                SizedBox(width: 10),
+                                Expanded(
+                                  child: Text(
+                                    'Gestión turística.',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.teal,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
                       ],
                     ),
