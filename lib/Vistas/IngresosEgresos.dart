@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 
 class IngresosEgresos extends StatefulWidget {
-  const IngresosEgresos({super.key});
+  
+  final TabController tabController;
+  final Function(List<Map<String, dynamic>>, List<Map<String, dynamic>>) onCalcular;
+
+  const IngresosEgresos({super.key, required this.tabController, required this.onCalcular});
 
   @override
   State<IngresosEgresos> createState() => _IngresosEgresosState();
@@ -26,16 +30,19 @@ class _IngresosEgresosState extends State<IngresosEgresos> {
   ];
 
   void guardarDatos() {
-    for (var item in ingresos) {
-      print("${item["nombre"]}: ${item["valor"].text}");
-    }
-    for (var item in egresos) {
-      print("${item["nombre"]}: ${item["valor"].text}");
-    }
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text("Datos guardados con éxito")),
-    );
+  for (var item in ingresos) {
+    debugPrint("${item["nombre"]}: ${item["valor"].text}");
   }
+  for (var item in egresos) {
+    debugPrint("${item["nombre"]}: ${item["valor"].text}");
+  }
+  widget.onCalcular(ingresos, egresos);
+  ScaffoldMessenger.of(context).showSnackBar(
+    const SnackBar(content: Text("Datos guardados con éxito")),
+  );
+
+}
+  
 
   @override
   Widget build(BuildContext context) {
@@ -95,7 +102,7 @@ class _IngresosEgresosState extends State<IngresosEgresos> {
                               ),
                             ),
                             child: const Text(
-                              'Guardar',
+                              'Calcular',
                               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
                             ),
                           ),
@@ -167,4 +174,5 @@ class _IngresosEgresosState extends State<IngresosEgresos> {
       }).toList(),
     );
   }
+  
 }
