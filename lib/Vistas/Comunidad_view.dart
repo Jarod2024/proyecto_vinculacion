@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'login.dart';
 import 'admin_eco_familiar.dart';
-
+import 'GestionTuristica.dart';
 
 class MiembroComunidad extends StatefulWidget {
   const MiembroComunidad({super.key});
@@ -93,7 +93,7 @@ class _MiembroComunidadState extends State<MiembroComunidad> {
                             context,
                             'Gestión turística',
                             Icons.hotel,
-                            null,
+                            TurismoComunitario(),
                           ),
                         ),
                       ],

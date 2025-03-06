@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'login.dart';
 import 'package:proyecto_vinculacion/Vistas/admin_comunitaria.dart';
+import 'package:proyecto_vinculacion/Vistas/GestionTuristica.dart';
+import 'admin_eco_familiar.dart';
 
 class LiderComunidad extends StatefulWidget {
   const LiderComunidad({super.key});
@@ -79,8 +81,8 @@ class _LiderComunidadState extends State<LiderComunidad> {
                               _crearBoton(context, 'Técnicas tributarias', Icons.account_balance, null),
                               _crearBoton(context, 'Liderazgo comunitario', Icons.group_work, null),
                               _crearBoton(context, 'Derecho laboral', Icons.gavel,null),
-                              _crearBoton(context, 'Eco. familiar', Icons.monetization_on, null),
-                              _crearBoton(context, 'Gestión turística', Icons.hotel, null),
+                              _crearBoton(context, 'Eco. familiar', Icons.monetization_on, AdminEcoFamiliar()),
+                              _crearBoton(context, 'Gestión turística', Icons.hotel, TurismoComunitario()),
                             ],
                           ),
                         ),
