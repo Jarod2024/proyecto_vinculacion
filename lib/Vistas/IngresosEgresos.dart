@@ -27,6 +27,11 @@ class _IngresosEgresosState extends State<IngresosEgresos> {
     {"nombre": "Costos de electricidad", "icono": Icons.electric_bolt, "valor": TextEditingController()},
     {"nombre": "Costos de agua", "icono": Icons.water_drop, "valor": TextEditingController()},
     {"nombre": "Contrato de servicios", "icono": Icons.receipt, "valor": TextEditingController()},
+    {"nombre": "Costos de Arrendamiento", "icono": Icons.other_houses, "valor": TextEditingController()},
+    {"nombre": "Costos de mantenimiento", "icono": Icons.build, "valor": TextEditingController()},
+    {"nombre": "Costos de seguro", "icono": Icons.security, "valor": TextEditingController()},
+    {"nombre": "Costos de Salario del Personal", "icono": Icons.supervised_user_circle_outlined, "valor": TextEditingController()},
+
   ];
 
   void guardarDatos() {

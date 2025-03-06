@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'login.dart';
-import 'admin_comunitaria.dart';
+import 'admin_eco_familiar.dart';
 
 
 class MiembroComunidad extends StatefulWidget {
@@ -76,14 +76,14 @@ class _MiembroComunidadState extends State<MiembroComunidad> {
                               context,
                               'Técnicas de administración comunitaria',
                               Icons.business,
-                              AdminComunitaria(),
+                              null,
                             ),
                             const SizedBox(width: 15),
                             _crearBoton(
                               context,
                               'Administración de economía familiar',
                               Icons.monetization_on,
-                              widget,
+                              AdminEcoFamiliar(),
                             ),
                           ],
                         ),
@@ -93,7 +93,7 @@ class _MiembroComunidadState extends State<MiembroComunidad> {
                             context,
                             'Gestión turística',
                             Icons.hotel,
-                            widget,
+                            null,
                           ),
                         ),
                       ],
@@ -108,7 +108,7 @@ class _MiembroComunidadState extends State<MiembroComunidad> {
     );
   }
 
-  Widget _crearBoton(BuildContext context, String texto, IconData icono, Widget paginaDestino) {
+  Widget _crearBoton(BuildContext context, String texto, IconData icono, Widget? paginaDestino) {
     return Container(
       width: 120,
       height: 120,
@@ -128,10 +128,17 @@ class _MiembroComunidadState extends State<MiembroComunidad> {
         child: InkWell(
           borderRadius: BorderRadius.circular(15),
           onTap: () {
+            // ignore: unnecessary_null_comparison
+            if (paginaDestino != null) {
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => paginaDestino),
             );
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Funcionalidad en desarrollo')),
+            );
+          }
           },
           child: Padding(
             padding: const EdgeInsets.all(10.0),
