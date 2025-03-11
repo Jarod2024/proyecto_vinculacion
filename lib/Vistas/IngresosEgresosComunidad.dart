@@ -1,53 +1,54 @@
 import 'package:flutter/material.dart';
 
-class IngresosEgresos extends StatefulWidget {
-  
+class IngresosEgresosComunidad extends StatefulWidget {
   final TabController tabController;
-  final Function(List<Map<String, dynamic>>, List<Map<String, dynamic>>) onCalcular;
+  final Function(List<Map<String, dynamic>>, List<Map<String, dynamic>>, List<Map<String,dynamic>>, List<Map<String, dynamic>>) onCalcular;
 
-  const IngresosEgresos({super.key, required this.tabController, required this.onCalcular});
-
+  const IngresosEgresosComunidad({super.key, required this.tabController, required this.onCalcular});
   @override
-  State<IngresosEgresos> createState() => _IngresosEgresosState();
+  State<IngresosEgresosComunidad> createState() => _IngresosEgresosComunidadState();
 }
 
-class _IngresosEgresosState extends State<IngresosEgresos> {
+class _IngresosEgresosComunidadState extends State<IngresosEgresosComunidad> {
   bool mostrarIngresos = false;
   bool mostrarEgresos = false;
-
+  bool mostrarAhorros = false;
+  bool mostrarInversiones = false;
+  
   final List<Map<String, dynamic>> ingresos = [
-    {"nombre": "Cuotas comunitarias", "icono": Icons.account_balance, "valor": TextEditingController()},
-    {"nombre": "Eventos solidarios", "icono": Icons.event, "valor": TextEditingController()},
-    {"nombre": "Microemprendimientos", "icono": Icons.business, "valor": TextEditingController()},
-    {"nombre": "Donaciones", "icono": Icons.volunteer_activism, "valor": TextEditingController()},
-    {"nombre": "Alianzas estratégicas", "icono": Icons.handshake, "valor": TextEditingController()},
+    {"nombre": "Salario", "icono": Icons.monetization_on},
+    {"nombre": "Emprendimiento", "icono": Icons.business, "negrita": true},
+    {"nombre": "Adicionales", "icono": Icons.attach_money},
   ];
 
   final List<Map<String, dynamic>> egresos = [
-    {"nombre": "Costos de electricidad", "icono": Icons.electric_bolt, "valor": TextEditingController()},
-    {"nombre": "Costos de agua", "icono": Icons.water_drop, "valor": TextEditingController()},
-    {"nombre": "Contrato de servicios", "icono": Icons.receipt, "valor": TextEditingController()},
-    {"nombre": "Costos de Arrendamiento", "icono": Icons.other_houses, "valor": TextEditingController()},
-    {"nombre": "Costos de mantenimiento", "icono": Icons.build, "valor": TextEditingController()},
-    {"nombre": "Costos de seguro", "icono": Icons.security, "valor": TextEditingController()},
-    {"nombre": "Costos de Salario del Personal", "icono": Icons.supervised_user_circle_outlined, "valor": TextEditingController()},
+    {"nombre": "Alquiler o hipoteca", "icono": Icons.home},
+    {"nombre": "Servicios públicos", "icono": Icons.lightbulb},
+    {"nombre": "Alimentación", "icono": Icons.local_grocery_store},
+    {"nombre": "Educación", "icono": Icons.school},
+    {"nombre": "Entretenimiento", "icono": Icons.movie, "negrita": true},
+    {"nombre": "Transporte", "icono": Icons.directions_bus},
+  ];
 
+  final List<Map<String, dynamic>> ahorros = [
+    {"nombre": "Cuenta de ahorros", "icono": Icons.savings},
+    {"nombre": "Fondo de emergencia", "icono": Icons.security},
+  ];
+
+  final List<Map<String, dynamic>> inversiones = [
+    {"nombre": "Acciones", "icono": Icons.trending_up},
+    {"nombre": "Bienes raíces", "icono": Icons.real_estate_agent},
   ];
 
   void guardarDatos() {
-  for (var item in ingresos) {
-    debugPrint("${item["nombre"]}: ${item["valor"].text}");
+    for (var item in [...ingresos, ...egresos, ...ahorros, ...inversiones]) {
+      debugPrint("${item["nombre"]}: ${item["valor"]?.text ?? "0.00"}");
+    }
+    widget.onCalcular(ingresos, egresos,ahorros,inversiones);
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text("Datos guardados con éxito")),
+    );
   }
-  for (var item in egresos) {
-    debugPrint("${item["nombre"]}: ${item["valor"].text}");
-  }
-  widget.onCalcular(ingresos, egresos);
-  ScaffoldMessenger.of(context).showSnackBar(
-    const SnackBar(content: Text("Datos guardados con éxito")),
-  );
-
-}
-  
 
   @override
   Widget build(BuildContext context) {
@@ -73,12 +74,11 @@ class _IngresosEgresosState extends State<IngresosEgresos> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
+                        
                         _buildCheckboxTile('Ingresos', mostrarIngresos, (value) {
                           setState(() => mostrarIngresos = value);
                         }, Icons.trending_up),
-
                         if (mostrarIngresos) _buildList(ingresos),
-
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 20.0),
                           child: Image.asset(
@@ -88,12 +88,28 @@ class _IngresosEgresosState extends State<IngresosEgresos> {
                             fit: BoxFit.contain,
                           ),
                         ),
-
                         _buildCheckboxTile('Egresos', mostrarEgresos, (value) {
                           setState(() => mostrarEgresos = value);
                         }, Icons.trending_down),
-
                         if (mostrarEgresos) _buildList(egresos),
+
+                        _buildCheckboxTile('Ahorros', mostrarAhorros, (value) {
+                          setState(() => mostrarAhorros = value);
+                        }, Icons.savings),
+                        if (mostrarAhorros) _buildList(ahorros),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 20.0),
+                          child: Image.asset(
+                            'assets/imagenes/ahorro_inversion.jpg',
+                            width: 350,
+                            height: 200,
+                            fit: BoxFit.contain,
+                          ),
+                        ),
+                        _buildCheckboxTile('Inversiones', mostrarInversiones, (value) {
+                          setState(() => mostrarInversiones = value);
+                        }, Icons.pie_chart),
+                        if (mostrarInversiones) _buildList(inversiones),
 
                         const SizedBox(height: 20),
                         Center(
@@ -107,7 +123,7 @@ class _IngresosEgresosState extends State<IngresosEgresos> {
                               ),
                             ),
                             child: const Text(
-                              'Calcular',
+                              'Guardar',
                               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
                             ),
                           ),
@@ -150,6 +166,7 @@ class _IngresosEgresosState extends State<IngresosEgresos> {
   Widget _buildList(List<Map<String, dynamic>> items) {
     return Column(
       children: items.map((item) {
+        item["valor"] ??= TextEditingController();
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: 5),
           child: ListTile(
@@ -179,5 +196,4 @@ class _IngresosEgresosState extends State<IngresosEgresos> {
       }).toList(),
     );
   }
-  
 }
